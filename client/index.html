@@ -1,122 +1,157 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>My HTML Page</title>
     <style>
-        /* Ensure the HTML and body take the full height of the viewport */
-        html, body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                /* height: 100%;
-                /* display: flex;
-                flex-direction: column; */
-                background: linear-gradient(to bottom, #c2e7f5, #93c7fa); /* Light blue gradient */
-        }
+      /* Ensure the HTML and body take the full height of the viewport */
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background: wheat;
+      }
 
-        /* Style for main content area */
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
+      /* Hidden class */
+      .hidden {
+        display: none !important;
+      }
 
-        /* Style for sidebar */
-        .sidebar {
-            width: 300px;
-            background-color: #edf1f1;
-            padding: 1rem;
-            height: 100vh; /* Full window height */
-            position: fixed;
-            top: 0;
-            right: -400px; /* Initially hidden off-screen */
-            z-index: 1000;
-            transition: right 0.3s ease; /* Transition effect */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0.7;
-        }
+      /* Style for main content area */
+      .main-content {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
 
-        .sidebar.show {
-            right: 0; /* Slide in */
-        }
+      /* Style for sidebar */
+      .sidebar {
+        width: 300px;
+        background-color: #edf1f1;
+        padding: 1rem;
+        height: 100vh; /* Full window height */
+        position: fixed;
+        top: 0;
+        right: -400px; /* Initially hidden off-screen */
+        z-index: 1000;
+        transition: right 0.3s ease; /* Transition effect */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0.7;
+      }
 
-        /* Style for iframe container */
-        .iframe-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: auto;
-        }
+      .sidebar.show {
+        right: 0; /* Slide in */
+      }
 
-        /* Style for iframe */
-        iframe {
-            margin-top: 2rem;
-            width: 1100px;
-            height: 700px;
-            border: none;
-            zoom: 1.2;
-        }
+      /* Style for iframe container */
+      .iframe-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+      }
 
+      /* Style for iframe */
+      iframe {
+        margin-top: 2rem;
+        width: 1100px;
+        height: 700px;
+        border: none;
+        zoom: 1.2;
+      }
+
+      /* Style the login message */
+      #login-message {
+        text-align: center;
+        font-size: 18px;
+        margin-top: 50px;
+        color: #f00;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="navbar"></div>
 
-    <div id="user-buttons"></div>
+    <div id="user-buttons" class="hidden"></div>
 
-
-    <div class="main-content">
-        <div id="sidebar" class="sidebar">
-            <p id="sidebar-content">Sidebar content</p>
-            <button id="close-sidebar-button">Close</button>
-        </div>
-
-
-        <div class="iframe-container">
-            <iframe id="worldMapIframe" src="worldMap.html"></iframe>
-            <!-- <object id="worldMapIframe" type="text/html" data="worldMap.html"></object> -->
-        </div>
+    <div id="login-message" class="hidden">
+      <!-- This div will show the login message -->
+      <p>Please log in to view the content.</p>
     </div>
 
+    <div class="main-content hidden">
+      <div id="sidebar" class="sidebar">
+        <p id="sidebar-content">Sidebar content</p>
+        <button id="close-sidebar-button">Close</button>
+      </div>
 
+      <div class="iframe-container">
+        <iframe id="worldMapIframe" src="worldMap.html"></iframe>
+      </div>
+    </div>
 
     <script type="module">
-        import { loadNavbar, loadData, showSidebar, hideSidebar } from './utils.js';
-        
-        // load users and visited places
-        // Load the navbar when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            loadNavbar();
-            loadData();
+      import {
+        loadNavbar,
+        loadData,
+        showSidebar,
+        hideSidebar,
+      } from "./utils.js";
 
-            // Attach the hideSidebar function to the button
-            document.getElementById('close-sidebar-button').addEventListener('click', hideSidebar);
-        });
+      // Simulating login status (replace with actual login logic)
+      const isLoggedIn = true;
 
-        
-        // Listen for messages from the iframe (gets info about the path clicked)
-        window.addEventListener('message', (event) => {
-            console.log('Message received from MAP:', event.data);
-            if (event.data && event.data.pathId) {
-                showSidebar(event.data.pathId);
-            }
-        });
+      // Load the navbar, data, and set up iframe communication
+      document.addEventListener("DOMContentLoaded", () => {
+        loadNavbar();
+        loadData();
 
-        // Send a  test message to the iframe 
-        // const iframe = document.getElementById('worldMapIframe');
-        // iframe.onload = () => {
-        //     console.log('Iframe loaded, sending a test message to child html');
-        //     iframe.contentWindow.postMessage({ action: 'testing' }, '*');
-        // };
+        // Attach the hideSidebar function to the button
+        document
+          .getElementById("close-sidebar-button")
+          .addEventListener("click", hideSidebar);
 
-        
+        // Check login status and display appropriate content
+        const mainContent = document.querySelector(".main-content");
+        const loginMessage = document.getElementById("login-message");
+        const userButtons = document.getElementById("user-buttons");
 
+        // DEBUG: Ensure we see what's happening in the console
+        console.log("Login status:", isLoggedIn);
+
+        if (isLoggedIn) {
+          console.log("User is logged in, showing content");
+          mainContent.classList.remove("hidden");
+          userButtons.classList.remove("hidden");
+          loginMessage.classList.add("hidden");
+        } else {
+          console.log("User is NOT logged in, showing login message");
+          mainContent.classList.add("hidden");
+          userButtons.classList.add("hidden");
+          loginMessage.classList.remove("hidden");
+        }
+      });
+
+      // Listen for messages from the iframe (gets info about the path clicked)
+      window.addEventListener("message", (event) => {
+        console.log("Message received from MAP:", event.data);
+        if (event.data && event.data.pathId) {
+          showSidebar(event.data.pathId);
+        }
+      });
+
+      // Send a  test message to the iframe
+      // const iframe = document.getElementById('worldMapIframe');
+      // iframe.onload = () => {
+      //     console.log('Iframe loaded, sending a test message to child html');
+      //     iframe.contentWindow.postMessage({ action: 'testing' }, '*');
+      // };
     </script>
+
     <script src="users.js"></script>
     <script src="visitedPlaces.js"></script>
-
-</body>
+  </body>
 </html>
