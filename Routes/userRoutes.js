@@ -65,8 +65,18 @@ router.post('/api/login', async (req, res) => {
 		}
 		// Validate if user exist in our database
 		const user = await User.findOne({ username });
+		if (!user) {
+			// If the user doesn't exist, return a specific message
+			return res.status(400).json({ message: 'User does not exist' });
+		}
+		// Check if the password is correct
+		const isPasswordValid = await bcrypt.compare(password, user.password);
+		if (!isPasswordValid) {
+			// If the password is wrong, return this message
+			return res.status(400).json({ message: 'Wrong password' });
+		}
 
-		if (user && (await bcrypt.compare(password, user.password))) {
+		if (user && isPasswordValid) {
 			// Create token
 			const token = jwt.sign(
 				{
