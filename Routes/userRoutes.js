@@ -31,7 +31,7 @@ router.post('/api/register', async (req, res) => {
 		// Check if username already exists
 		const existingUsername = await User.findOne({ username });
 		if (existingUsername) {
-			return res.status(409).json({ message: 'Username already exists' });
+			return res.status(409).json({ message: 'This username is already taken, please use another one' });
 		}
 
 		// Check if email already exists
