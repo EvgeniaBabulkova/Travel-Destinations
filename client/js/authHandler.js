@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 	initializeAuth();
 });
+const loginErrorMessage = document.getElementById('loginErrorMessage');
+const registerErrorMessage = document.getElementById('registerErrorMessage');
 
 function initializeAuth() {
 	const token = sessionStorage.getItem('jwt-TravelDestination');
@@ -140,9 +142,11 @@ const login = async (username, password) => {
 			window.location.reload();
 			//loginModal.close();
 		} else {
-			alert(data.message);
+			// alert(data.message);
+			loginErrorMessage.textContent = data.message || 'An error occurred during login.';
 		}
 	} catch (error) {
+		loginErrorMessage.textContent = 'Network error. Please try again later.';
 		console.error('Error logging in:', error);
 	}
 };
@@ -166,9 +170,11 @@ const register = async (username, password, email) => {
 			registerModal.close();
 			loginModal.showModal();
 		} else {
-			alert(data.message);
+			// alert(data.message);
+			registerErrorMessage.textContent = data.message || 'An error occurred during registration.';
 		}
 	} catch (error) {
+		registerErrorMessage.textContent = 'Network error. Please try again later.';
 		console.error('Error registering user:', error);
 	}
 };

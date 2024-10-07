@@ -81,7 +81,7 @@ router.post('/api/login', async (req, res) => {
 			const { password, ...userWithoutPassword } = user._doc;
 			return res.status(200).json({ ...userWithoutPassword, token });
 		}
-		return res.status(400).json({ message: 'Invalid Credentials' });
+		return res.status(400).json({ message: 'User does not exist' });
 	} catch (error) {
 		return res.status(400).json({ error: error.message });
 	}
