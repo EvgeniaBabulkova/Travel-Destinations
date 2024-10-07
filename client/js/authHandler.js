@@ -167,6 +167,7 @@ const register = async (username, password, email) => {
 
 		if (response.ok) {
 			console.log('User registered:', data);
+			alert('Registration successful! Welcome, ' + username + '!');
 			registerModal.close();
 			loginModal.showModal();
 		} else {
